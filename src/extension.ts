@@ -137,7 +137,14 @@ export function activate(context: vscode.ExtensionContext) {
         }
         
         webPanel.webview.html = provider.provideTextDocumentContent(previewUri);
-        
+
+        webPanel.onDidDispose(
+            () => {
+              webPanel = undefined;
+            },
+            null,
+            context.subscriptions
+        );
     });
 
     let help_command = vscode.commands.registerCommand("extension.simpl_help", () => {
