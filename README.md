@@ -45,6 +45,11 @@ So users can utilize their own snippets if desired, code snippets are available 
 
 ## Release Notes
 
+## 1.3.3
+
+- Fixed constant definition highlighting
+- Added a partial implementation of variable highlighting
+
 ## 1.3.2
 
 - Fixed a bug where visualize simpl+ wouldn't work if the visualize panel was closed manually.
