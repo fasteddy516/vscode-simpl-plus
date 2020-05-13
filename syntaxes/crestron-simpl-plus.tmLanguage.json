@@ -107,7 +107,7 @@
             "match":"(?i)(#define_constant)\\s+([#$\\w]+)\\s+",
             "captures": {
                 "1": { "name": "keyword.other.preprocessor.usp"},
-                "2": { "name": "variable.other.usp"}
+                "2": { "name": "variable.other.constant.usp"}
             }
         },
         {
