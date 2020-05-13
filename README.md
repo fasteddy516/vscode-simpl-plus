@@ -47,8 +47,8 @@ So users can utilize their own snippets if desired, code snippets are available 
 
 ## 1.3.3
 
-- Fixed constant definition highlighting
-- Added a partial implementation of variable highlighting
+- Fixed constant definition highlighting.
+- Added a partial implementation of variable highlighting.
 
 ## 1.3.2
 

@@ -2,6 +2,15 @@
 
 All notable changes to the "crestron-simpl-plus" extension will be documented in this file.
 
+## 1.3.3
+
+- Fixed constant definition highlighting.
+- Added a partial implementation of variable highlighting.
+
+## 1.3.2
+
+- Fixed a bug where visualize simpl+ wouldn't work if the visualize panel was closed manually.
+
 ## 1.3.1
 
 - Added new functions, error codes, structures and more to syntax highlighting.
