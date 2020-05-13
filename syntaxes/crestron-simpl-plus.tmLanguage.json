@@ -104,7 +104,7 @@
         },
         {
             "comment": "Define Constants",
-            "match":"(?i)(#define_constant)(.+)\\s.+\\s",
+            "match":"(?i)(#define_constant)\\s+([#$\\w]+)\\s+",
             "captures": {
                 "1": { "name": "keyword.other.preprocessor.usp"},
                 "2": { "name": "variable.other.usp"}
@@ -240,8 +240,11 @@
                 },
                 {
                     "comment": "Crestron Variable Types",
-                    "match": "(?i)\\b(dynamic|integer|long_integer|signed_integer|signed_long_integer|string|structure)\\b",
-                    "name": "storage.type.usp"
+                    "match": "(?i)\\b(dynamic|integer|long_integer|signed_integer|signed_long_integer|string|structure)\\s+([#$\\w]+)\\b",
+                    "captures": {
+                        "1": { "name": "storage.type.usp"},
+                        "2": { "name": "variable.other.usp"}
+                    }
                 },
                 {
                     "comment": "Crestron Variable Reference",
@@ -416,7 +419,7 @@
                 {
                     "comment": "Crestron Other Operands",
                     "match": "(?i)\\b(MOD|UMOD)\\b",
-                    "name": "storage.type.usp"
+                    "name": "keyword.operator.usp"
                 },
                 {
                     "comment": "Crestron Digital Signal Value",
