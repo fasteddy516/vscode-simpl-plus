@@ -73,19 +73,34 @@
                     "simpl.singleTarget": {
                         "type": "string",
                         "default": "series3",
-                        "enum": ["series2", "series3", "series4"],
+                        "enum": [
+                            "series2",
+                            "series3",
+                            "series4"
+                        ],
                         "description": "Command line '\\target' option to send to SIMPL+ compiler for single target compile."
                     },
                     "simpl.multipleTargets": {
                         "type": "string",
                         "default": "series2 series3",
-                        "enum": ["series2 series3", "series3 series4", "series2 series3 series4"],
+                        "enum": [
+                            "series2 series3",
+                            "series3 series4",
+                            "series2 series3 series4"
+                        ],
                         "description": "Command line '\\target' option to send to SIMPL+ compiler for multi target compile."
                     },
                     "simpl.multipleFileTargets": {
                         "type": "string",
                         "default": "series3",
-                        "enum": ["series2", "series3", "series4", "series2 series3", "series3 series4", "series2 series3 series4"],
+                        "enum": [
+                            "series2",
+                            "series3",
+                            "series4",
+                            "series2 series3",
+                            "series3 series4",
+                            "series2 series3 series4"
+                        ],
                         "description": "Command line '\\target' option to send to SIMPL+ compiler for multi file compile."
                     }
                 }
