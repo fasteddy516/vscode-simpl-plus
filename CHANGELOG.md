@@ -2,6 +2,12 @@
 
 All notable changes to the "crestron-simpl-plus" extension will be documented in this file.
 
+## 1.4.0
+
+- Added support for 4-series targets.
+- References to processor series have been removed from compile commands.
+- Target processor series for compile commands is now specified through settings.
+
 ## 1.3.3
 
 - Fixed constant definition highlighting.

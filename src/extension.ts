@@ -92,17 +92,15 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-
-
-    let series3_compile = vscode.commands.registerCommand('extension.simplCC_Series3', () => {
-        processSimpl("\\target series3");
+    let singleTarget_compile = vscode.commands.registerCommand('extension.simplCC_singleTarget', () => {
+        processSimpl("\\target " + vscode.workspace.getConfiguration("simpl").singleTarget);
     });
 
-    let series2and3_compile = vscode.commands.registerCommand('extension.simplCC_Series2and3', () => {
-        processSimpl("\\target series2 series3");
+    let multiTarget_compile = vscode.commands.registerCommand('extension.simplCC_multiTarget', () => {
+        processSimpl("\\target " + vscode.workspace.getConfiguration("simpl").multipleTargets);
     });
 
-    let series3_compileAll = vscode.commands.registerCommand("extension.simplCC_Series3All", () => {
+    let multiFile = vscode.commands.registerCommand("extension.simplCC_multiFile", () => {
         let foundFiles = vscode.workspace.findFiles('*.usp');
         let term = vscode.window.createTerminal('simplCC', vscode.workspace.getConfiguration("simpl").terminalLocation);
         let compiler = new SimplCompiler();
@@ -113,7 +111,7 @@ export function activate(context: vscode.ExtensionContext) {
                 files.forEach(e => {
                     compiler.filepaths.push(e.fsPath);
                 });
-                term.sendText(compiler.buildCommand("\\target series3"));
+                term.sendText(compiler.buildCommand("\\target " + vscode.workspace.getConfiguration("simpl").multipleFileTargets));
             } else {
                 vscode.window.showErrorMessage("No .usp files found");
             }
@@ -164,9 +162,9 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(series3_compile);
-    context.subscriptions.push(series2and3_compile);
-    context.subscriptions.push(series3_compileAll);
+    context.subscriptions.push(singleTarget_compile);
+    context.subscriptions.push(multiTarget_compile);
+    context.subscriptions.push(multiFile);
     context.subscriptions.push(help_command);
     context.subscriptions.push(simpl_visualize);
     context.subscriptions.push(open_api);
