@@ -1,12 +1,16 @@
 # crestron-simpl-plus README
 
-VSCode Extension which adds syntax highlighting and provides commands in the command palette for compiling.
+VSCode extension for Crestron SIMPL+. Includes syntax highlighting, compiler functions and module I/O visualization.
 
-Note: To take advantage of the compiler operations, you must have the Crestron provided SIMPL+ Compiler installed.
+_Note: To take advantage of the compiler operations, you must have the Crestron provided SIMPL+ Compiler installed._
 
 ## Features
 
-Syntax highlighting. Compiler.
+* Syntax highlighting for `.usp` and `.usl` files
+* Access to compiler functions and target selection from within VSCode
+* Real-time module I/O visualization
+* Quick access to the SIMPL+ help file
+* Quick access to API files associated with SIMPL# libraries
 
 This extension contributes the following commands:
 
@@ -21,7 +25,7 @@ This extension contributes the following commands:
 
 This extension contributes the following settings:
 
-* `simpl.compiler`: sets the path of the Simpl+ compiler. Can be set to a custom path via the user settings. Please use the double \ to specify directory paths.
+* `simpl.compiler`: sets the path of the SIMPL+ compiler. Can be set to a custom path via the user settings. Please use the double \ to specify directory paths.
 * `simpl.helpLocation`: sets the path of the SIMPL+ reference guide. Can be set to a custom path via the user settings. Please use the double \ to specify directory paths.
 * `simpl.terminalLocation`: sets path of the default windows cmd.exe. Can be set to a custom path via the user settings. Please use the double \ to specify directory paths. 
 
@@ -31,7 +35,7 @@ This extension contributes the following settings:
 
 All commands are added to the right click context menu of the editor tab, and the following keybindings have been added.
 
-* `CTRL+F1` - _Open Simpl+ Help_
+* `CTRL+F1` - _Open SIMPL+ Help_
 * `CTRL+F12` - _Compile current file_:  
     If a `.ush` file is available, the targets specified within will be used.  Otherwise, the default targets specified in the extension's settings will be applied.
 * `CTRL+ALT+F12` - _Select targets and compile current file_:  
@@ -41,15 +45,23 @@ All commands are added to the right click context menu of the editor tab, and th
 
 ## Snippets
 
-So users can utilize their own snippets if desired, code snippets are available in a separate extension named "Crestron Simpl+ Code Snippets".
+So users can utilize their own snippets if desired, code snippets are available in a separate extension named "Crestron SIMPL+ Code Snippets".
 
 ## Known Issues
 
-* API files - if CLZ is recently generated, the API file opened or generated may not be the newest available. If this happens, try a compile and then attempt opening the API file again.
+* **SIMPL+ Help File** - Help is not context-sensitive, so a manual search within the help file is required to get information about specific features/functions.
+
+* **API Files** - The `View SIMPL# API` command is not context-sensitive.  It will load the `.api` file(s) for all SIMPL# libraries used in the current module.
+
+* **API Files** - If the SIMPL# CLZ is recently generated, the API file opened may not be the newest available. If this happens, try a compile and then attempt opening the API file again.
+
+* **API Files** - Syntax highlighting is not 100% fleshed out for these files (particularly if a fallback to a `.h` file is required), so some elements may not get highlighted as expected.
 
 ## Release Notes
 
 ## 2.0.0
+
+**EXISTING EXTENSION USERS:** In addition to the changes noted below, the extension _publisher_ and _repository_ data fields have been updated to point to the correct (current) locations.  This makes VSCode treat this version as a whole new extension, and it will be installed *alongside* an older version rather than simply updating it.  **To prevent conflicts, you will need to uninstall any older versions of the extension (<=1.3.3).**  This is a one-time process, and will not be required when updating to future (>2.0.0) versions.
 
 * Complete re-work of compile options and target selection:
   * `CTRL+F12` - _Compile current file_:  
@@ -72,7 +84,7 @@ So users can utilize their own snippets if desired, code snippets are available 
 
 ## 1.3.2
 
-* Fixed a bug where visualize simpl+ wouldn't work if the visualize panel was closed manually.
+* Fixed a bug where visualize SIMPL+ wouldn't work if the visualize panel was closed manually.
 
 ## 1.3.1
 
@@ -82,8 +94,8 @@ So users can utilize their own snippets if desired, code snippets are available 
 
 ### 1.3.0
 
-* Added support for opening and generating Simpl# API files.
-* Syntax highlighting for Simpl# API files.
+* Added support for opening and generating SIMPL# API files.
+* Syntax highlighting for SIMPL# API files.
 * Fixed an issue in the visualizer with multiple signal detection.
 
 ### 1.2.3

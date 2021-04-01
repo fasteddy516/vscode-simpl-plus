@@ -1,7 +1,7 @@
 {
     "name": "crestron-simpl-plus",
-    "displayName": "Crestron Simpl+",
-    "description": "Extension for Crestron SIMPL+. Includes syntax highlighting and compiler access.",
+    "displayName": "Crestron SIMPL+",
+    "description": "Extension for Crestron SIMPL+. Includes syntax highlighting, compiler functions and module I/O visualization.",
     "version": "2.0.0",
     "publisher": "fasteddy516",
     "icon": "simpl_plus_icon.png",
@@ -28,27 +28,27 @@
         "commands": [
             {
                 "command": "extension.simplCC_defaultCompile",
-                "title": "Simpl+ compile current file"
+                "title": "SIMPL+ Compile current file"
             },
             {
                 "command": "extension.simplCC_selectCompileSingle",
-                "title": "Simpl+ select targets and compile current file"
+                "title": "SIMPL+ Select targets and compile current file"
             },
             {
                 "command": "extension.simplCC_selectCompileMultiple",
-                "title": "Simpl+ select targets and compile all files"
+                "title": "SIMPL+ Select targets and compile all files"
             },
             {
                 "command": "extension.simpl_help",
-                "title": "Simpl+ Help Reference."
+                "title": "SIMPL+ Help Reference"
             },
             {
                 "command": "extension.simpl_visualize",
-                "title": "Visualize SIMPL+ module."
+                "title": "SIMPL+ Visualize Module"
             },
             {
                 "command": "extension.simplCC_API",
-                "title": "Simpl# API"
+                "title": "View SIMPL# API"
             }
         ],
         "configuration": [
@@ -63,7 +63,7 @@
                     "simpl.helpLocation": {
                         "type": "string",
                         "default": "C:\\Program Files (x86)\\Crestron\\Simpl\\Simpl+lr.chm",
-                        "description": "Location of the Simpl+ Help reference"
+                        "description": "Location of the SIMPL+ Help reference"
                     },
                     "simpl.terminalLocation": {
                         "type": "string",

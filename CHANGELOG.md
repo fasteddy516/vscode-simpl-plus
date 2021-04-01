@@ -4,6 +4,8 @@ All notable changes to the "crestron-simpl-plus" extension will be documented in
 
 ## 2.0.0
 
+**EXISTING EXTENSION USERS:** In addition to the changes noted below, the extension _publisher_ and _repository_ data fields have been updated to point to the correct (current) locations.  This makes VSCode treat this version as a whole new extension, and it will be installed *alongside* an older version rather than simply updating it.  **To prevent conflicts, you will need to uninstall any older versions of the extension (<=1.3.3).**  This is a one-time process, and will not be required when updating to future (>2.0.0) versions.
+
 * Complete re-work of compile options and target selection:
   * **CTRL-F12** - _Compile current file_:  
     If a `.ush` file is available, the targets specified within will be used.  Otherwise, the default targets specified in the extension's settings will be applied.
@@ -25,7 +27,7 @@ All notable changes to the "crestron-simpl-plus" extension will be documented in
 
 ## 1.3.2
 
-* Fixed a bug where visualize simpl+ wouldn't work if the visualize panel was closed manually.
+* Fixed a bug where visualize SIMPL+ wouldn't work if the visualize panel was closed manually.
 
 ## 1.3.1
 
@@ -35,8 +37,8 @@ All notable changes to the "crestron-simpl-plus" extension will be documented in
 
 ## 1.3.0
 
-* Added support for opening and generating Simpl# API files.
-* Syntax highlighting for Simpl# API files.
+* Added support for opening and generating SIMPL# API files.
+* Syntax highlighting for SIMPL# API files.
 * Fixed an issue in the visualizer with multiple signal detection.
 
 ## 1.2.3
