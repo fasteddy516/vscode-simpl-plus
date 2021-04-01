@@ -4,6 +4,14 @@
     "description": "Extension for Crestron SIMPL+. Includes syntax highlighting, compiler functions and module I/O visualization.",
     "version": "2.0.0",
     "publisher": "fasteddy516",
+    "contributors": [
+        "Edward Wright",
+        "Alex Rademaker",
+        "Javier Vidal",
+        "Michael Gustin",
+        "Alex McLain"
+    ],
+    "license": "SEE LICENSE IN LICENSE",
     "icon": "simpl_plus_icon.png",
     "repository": {
         "type": "git",
