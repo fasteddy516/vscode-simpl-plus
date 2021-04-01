@@ -146,8 +146,7 @@
             {
                 "id": "simpl+",
                 "aliases": [
-                    "Crestron",
-                    "simpl+"
+                    "Crestron SIMPL+"
                 ],
                 "extensions": [
                     ".usp",
@@ -158,7 +157,7 @@
             {
                 "id": "simpl#_api",
                 "aliases": [
-                    "Simpl Sharp"
+                    "Crestron SIMPL#"
                 ],
                 "extensions": [
                     ".api"
