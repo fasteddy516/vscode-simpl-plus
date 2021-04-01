@@ -3,29 +3,27 @@ import { filterComments } from './utils';
 import { join, dirname } from 'path';
 import { existsSync, statSync } from 'fs';
 
-
-
 export class API {
     public editor: vscode.TextEditor;
     public fileText: string = '';
 
-    constructor (editor:vscode.TextEditor) {
+    constructor(editor: vscode.TextEditor) {
         this.editor = editor;
         this.fileText = filterComments(editor.document.getText());
     }
 
     public openAPIFiles() {
         let libs = this.getLibraryNames();
-        if(libs) {
+        if (libs) {
             let files = this.filterLibraryNames(libs);
             files.forEach(e => {
                 let apiPath = this.buildFilePath(e, '.api');
-                if(this.checkRecent(e)) {
-                    if(this.openFile(apiPath)){
+                if (this.checkRecent(e)) {
+                    if (this.openFile(apiPath)) {
                         console.log('Successfully opened ' + apiPath);
                     }
                 }
-                else if(this.generateAPIFile(e)) {
+                else if (this.generateAPIFile(e)) {
                     setTimeout(() => this.openFile(apiPath), 1500);
                 }
                 else {
@@ -69,7 +67,7 @@ export class API {
     }
 
     private openFile(filepath: string): boolean {
-        if(existsSync(filepath)) {
+        if (existsSync(filepath)) {
             let options: vscode.TextDocumentShowOptions = {};
             options.preview = false;
             let uri = vscode.Uri.file(filepath);

@@ -28,16 +28,16 @@ export function activate(context: vscode.ExtensionContext) {
     class TextDocumentContentProvider implements vscode.TextDocumentContentProvider {
         private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
 
-        public update (uri: vscode.Uri) {
+        public update(uri: vscode.Uri) {
             this._onDidChange.fire(uri);
         }
         public provideTextDocumentContent(uri: vscode.Uri): string {
-			return this.createVisualizer();
+            return this.createVisualizer();
         }
 
         private createVisualizer() {
             let editor = vscode.window.activeTextEditor;
-            if (editor){
+            if (editor) {
                 if (!(editor.document.languageId === 'simpl+')) {
                     return this.errorSnippet("A SIMPL+ file is not open.");
                 }
@@ -57,16 +57,16 @@ export function activate(context: vscode.ExtensionContext) {
             return viewer.returnSVG();
         }
         private errorSnippet(error: string): string {
-			return `
+            return `
 				<body>
 					${error}
 				</body>`;
-		}
-        
-        get onDidChange(): vscode.Event<vscode.Uri> {
-			return this._onDidChange.event;
         }
-        
+
+        get onDidChange(): vscode.Event<vscode.Uri> {
+            return this._onDidChange.event;
+        }
+
 
     }
 
@@ -75,22 +75,22 @@ export function activate(context: vscode.ExtensionContext) {
     let registration = vscode.workspace.registerTextDocumentContentProvider('simpl-visualize', provider);
 
     vscode.workspace.onDidChangeTextDocument((e: vscode.TextDocumentChangeEvent) => {
-        if (vscode.window.activeTextEditor && e.document === vscode.window.activeTextEditor.document){
+        if (vscode.window.activeTextEditor && e.document === vscode.window.activeTextEditor.document) {
             provider.update(previewUri);
-            if(webPanel) {
+            if (webPanel) {
                 webPanel.webview.html = provider.provideTextDocumentContent(previewUri);
             }
-		}
-	});
+        }
+    });
 
-	vscode.window.onDidChangeTextEditorSelection((e: vscode.TextEditorSelectionChangeEvent) => {
-		if (e.textEditor === vscode.window.activeTextEditor) {
+    vscode.window.onDidChangeTextEditorSelection((e: vscode.TextEditorSelectionChangeEvent) => {
+        if (e.textEditor === vscode.window.activeTextEditor) {
             provider.update(previewUri);
-            if(webPanel) {
+            if (webPanel) {
                 webPanel.webview.html = provider.provideTextDocumentContent(previewUri);
             }
-		}
-	});
+        }
+    });
 
     let singleTarget_compile = vscode.commands.registerCommand('extension.simplCC_singleTarget', () => {
         processSimpl("\\target " + vscode.workspace.getConfiguration("simpl").singleTarget);
@@ -107,7 +107,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         term.show();
         foundFiles.then(files => {
-            if(files.length) {
+            if (files.length) {
                 files.forEach(e => {
                     compiler.filepaths.push(e.fsPath);
                 });
@@ -120,25 +120,25 @@ export function activate(context: vscode.ExtensionContext) {
 
     let simpl_visualize = vscode.commands.registerCommand("extension.simpl_visualize", () => {
         // return vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, 'SIMPL Preview').then((success) => {
-		// }, (reason) => {
-		// 	vscode.window.showErrorMessage(reason);
+        // }, (reason) => {
+        // 	vscode.window.showErrorMessage(reason);
         // });
-        if(webPanel){ 
+        if (webPanel) {
             webPanel.reveal();
         }
         else {
             webPanel = vscode.window.createWebviewPanel(
                 previewUri.toString(),
-                "Simpl+ Visualizer", 
+                "Simpl+ Visualizer",
                 vscode.ViewColumn.Two
             );
         }
-        
+
         webPanel.webview.html = provider.provideTextDocumentContent(previewUri);
 
         webPanel.onDidDispose(
             () => {
-              webPanel = undefined;
+                webPanel = undefined;
             },
             null,
             context.subscriptions
@@ -150,7 +150,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         let term = vscode.window.createTerminal('simpl', vscode.workspace.getConfiguration("simpl").terminalLocation);
         term.sendText("\"" + helpLocation + "\"");
-        
+
     });
 
     let open_api = vscode.commands.registerCommand("extension.simplCC_API", () => {
@@ -171,22 +171,22 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(registration);
 }
 
-function processSimpl(args: string){
+function processSimpl(args: string) {
     let editor = vscode.window.activeTextEditor;
-    if (!editor){
+    if (!editor) {
         vscode.window.showErrorMessage("Please open a valid USP file.");
         return;
     }
 
     let doc = editor.document;
-    if(doc.languageId === "simpl+"){
+    if (doc.languageId === "simpl+") {
         let savedDoc = doc.save();
-        savedDoc.then(()=> {
-            let compiler = new SimplCompiler(); 
+        savedDoc.then(() => {
+            let compiler = new SimplCompiler();
             compiler.filepaths.push(doc.fileName);
             let term = vscode.window.createTerminal('simplCC', vscode.workspace.getConfiguration("simpl").terminalLocation);
             term.show();
-            term.sendText(compiler.buildCommand(args)); 
+            term.sendText(compiler.buildCommand(args));
         });
     }
     else {
@@ -199,7 +199,7 @@ class SimplCompiler {
     public filepaths: string[] = [];
 
     public compilerPath: string;
-    
+
     constructor() {
         this.compilerPath = "\"" + vscode.workspace.getConfiguration("simpl").compiler + "\"";
         console.log(this.compilerPath);
@@ -211,10 +211,10 @@ class SimplCompiler {
             filepathConcat += "\"" + element + "\" ";
         });
 
-        return this.compilerPath + 
-            " \\rebuild " + 
-            filepathConcat + " " + 
-            args; 
+        return this.compilerPath +
+            " \\rebuild " +
+            filepathConcat + " " +
+            args;
     }
 
 }
