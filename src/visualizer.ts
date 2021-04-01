@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { filterComments } from './utils';
-
+import { join, dirname } from 'path';
+import { readFileSync, existsSync } from 'fs';
 
 export class SVGCreator {
 
@@ -106,8 +107,6 @@ interface RegExSignals {
     io: IOTypes;
 }
 
-
-
 export class VisualizerParse {
 
     public fileText: string = '';
@@ -135,7 +134,6 @@ export class VisualizerParse {
         'outputShift': /#OUTPUT_SHIFT(.*?)(?=\r\n)/gmi,
     };
 
-
     constructor() {
         this.myRegExSignals.push({ pattern: this.regExPatterns['digitalIn'], type: SigTypes.digital, io: IOTypes.input });
         this.myRegExSignals.push({ pattern: this.regExPatterns['digitalOut'], type: SigTypes.digital, io: IOTypes.output });
@@ -150,7 +148,35 @@ export class VisualizerParse {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
             this.fileText = editor.document.getText();
+            let libs = this.getLibraryNames();
+            if (libs) {
+                let files = this.filterLibraryNames(libs);
+                files.forEach(e => {
+                    let usl = join(dirname(editor.document.uri.fsPath), e + ".usl");
+                    if (existsSync(usl)) {
+                        let data = readFileSync(usl).toString();
+                        if (data.length) {
+                            this.fileText += ("\n" + data);
+                        }
+                    }
+                });
+            }
         }
+    }
+
+    private getLibraryNames(): RegExpMatchArray | null {
+        return this.fileText.match(/#USER_LIBRARY\s*?"([\S\s]*?)"/gmi);
+    }
+
+    private filterLibraryNames(arr: RegExpMatchArray): string[] {
+        let results: string[] = [];
+        arr.forEach(e => {
+            let match = e.match(/#USER_LIBRARY\s*?"([\S\s]*?)"/mi);
+            if (match) {
+                results.push(match[1].toString());
+            }
+        });
+        return results;
     }
 
     public parseSimplPlus() {
@@ -186,7 +212,6 @@ export class VisualizerParse {
             this.myOutputSignals.push(sig);
         }
 
-
         //separate out ot each group in order
         let parsedAll = filtered.match(this.regExPatterns['allIO']);
 
@@ -207,8 +232,6 @@ export class VisualizerParse {
         if (param = filtered.match(this.regExPatterns['paramFull'])) {
             this.paramParse(param);
         }
-
-
     }
 
     private paramParse(input: RegExpMatchArray) {
@@ -338,6 +361,5 @@ export class VisualizerParse {
                 }
             }
         });
-
     }
 }
