@@ -12,6 +12,8 @@ All notable changes to the "crestron-simpl-plus" extension will be documented in
   - **CTRL-SHIFT-F12** - _Select target and compile all files_:  
     Provides a dialog for selecting the desired processor targets, then compiles all `.usp` files in the open folder using that selection.  
 - Added support for 4-series targets.
+- If a SIMPL# `.api` file cannot be found, the library's `'h` file will be displayed as a fallback.
+- SIMPL# `.api` file generation has been disabled because the necessary build tool is no longer available.
 - Updated extension and dependencies based on current Yeoman/generator-code scaffolding.
 - Some code cleanup and refactoring
 

@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { filterComments } from './utils';
 import { join, dirname } from 'path';
-import { existsSync, statSync } from 'fs';
+//import { existsSync, statSync } from 'fs'; // don't need statSync unless/until api generation gets reintroduced
+import { existsSync } from 'fs';
 
 export class API {
     public editor: vscode.TextEditor;
@@ -18,6 +19,19 @@ export class API {
             let files = this.filterLibraryNames(libs);
             files.forEach(e => {
                 let apiPath = this.buildFilePath(e, '.api');
+
+                // START OF NEW API OPENING FUNCTIONALITY
+               
+                if (!this.openFile(apiPath)) { 
+                    vscode.window.showErrorMessage('Unable to locate API file: ' + apiPath);
+                }
+                
+                // END OF NEW API OPENING FUNCTIONALITY
+
+                /*
+
+                // This is the original api processing functionality when api generation was possible
+
                 if (this.checkRecent(e)) {
                     if (this.openFile(apiPath)) {
                         console.log('Successfully opened ' + apiPath);
@@ -29,6 +43,8 @@ export class API {
                 else {
                     vscode.window.showErrorMessage('We were unable to find or generate the API file: ' + apiPath);
                 }
+
+                */
             });
         }
     }
@@ -53,29 +69,36 @@ export class API {
         return join(path, 'SPlsWork', filename + extension);
     }
 
-    private checkRecent(filename: string) {
-        let api = this.buildFilePath(filename, '.api');
-        let dll = this.buildFilePath(filename, '.dll');
-        if (existsSync(api) && existsSync(dll)) {
-            let apiStat = statSync(api);
-            let dllStat = statSync(dll);
-            if (apiStat.mtime > dllStat.mtime) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private openFile(filepath: string): boolean {
-        if (existsSync(filepath)) {
+        let apiPath = filepath;
+        if (!existsSync(apiPath)) {
+            apiPath = apiPath.replace(/\./g, "_"); // convert all dots to underscores
+            apiPath = apiPath.replace(/_api$/, ".h"); // switch the extension to look for a raw header file
+        }
+        if (existsSync(apiPath)) {
+            if (apiPath.endsWith("h")) {
+                let re = /[^\\]+$/;
+                let api = re.exec(filepath);
+                let h = re.exec(apiPath);
+                vscode.window.showWarningMessage("Could not locate " + api + ", displaying " + h + " as a fallback.");
+            }
             let options: vscode.TextDocumentShowOptions = {};
             options.preview = false;
-            let uri = vscode.Uri.file(filepath);
-            vscode.window.showTextDocument(uri, options);
+            let uri = vscode.Uri.file(apiPath);
+            vscode.workspace.openTextDocument(uri).then(document => {
+                // need to do this in case .h fallback file is loaded and gets assumed as another language (C, etc.)
+                vscode.languages.setTextDocumentLanguage(document, "simpl#_api");
+                vscode.window.showTextDocument(document, options);
+            });
             return true;
         }
         return false;
     }
+
+    /*
+
+    // Currently disabled - the SPlusHeader.exe file is no longer supplied.  Its functionality
+    // has been rolled into SPlusUtilities.dll library
 
     private generateAPIFile(filename: string): boolean {
         let dll = this.buildFilePath(filename, '.dll');
@@ -90,4 +113,19 @@ export class API {
         }
         return false;
     }
+
+    private checkRecent(filename: string) {
+        let api = this.buildFilePath(filename, '.api');
+        let dll = this.buildFilePath(filename, '.dll');
+        if (existsSync(api) && existsSync(dll)) {
+            let apiStat = statSync(api);
+            let dllStat = statSync(dll);
+            if (apiStat.mtime > dllStat.mtime) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    */
 }
