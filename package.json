@@ -16,9 +16,9 @@
         "Programming Languages"
     ],
     "activationEvents": [
-        "onCommand:extension.simplCC_singleTarget",
-        "onCommand:extension.simplCC_multiTarget",
-        "onCommand:extension.simplCC_multiFile",
+        "onCommand:extension.simplCC_defaultCompile",
+        "onCommand:extension.simplCC_selectCompileSingle",
+        "onCommand:extension.simplCC_selectCompileMultiple",
         "onCommand:extension.simpl_help",
         "onCommand:extension.simpl_visualize",
         "onCommand:extension.simplCC_API"
@@ -27,16 +27,16 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.simplCC_singleTarget",
-                "title": "Simpl+ compile current file for a single target"
+                "command": "extension.simplCC_defaultCompile",
+                "title": "Simpl+ compile current file"
             },
             {
-                "command": "extension.simplCC_multiTarget",
-                "title": "Simpl+ compile current file for multiple targets"
+                "command": "extension.simplCC_selectCompileSingle",
+                "title": "Simpl+ select targets and compile current file"
             },
             {
-                "command": "extension.simplCC_multiFile",
-                "title": "Simpl+ compile all files for specified targets"
+                "command": "extension.simplCC_selectCompileMultiple",
+                "title": "Simpl+ select targets and compile all files"
             },
             {
                 "command": "extension.simpl_help",
@@ -70,29 +70,9 @@
                         "default": "C:\\WINDOWS\\System32\\cmd.exe",
                         "description": "Location of the default windows cmd.exe"
                     },
-                    "simpl.singleTarget": {
+                    "simpl.defaultTarget": {
                         "type": "string",
-                        "default": "series3",
-                        "enum": [
-                            "series2",
-                            "series3",
-                            "series4"
-                        ],
-                        "description": "Command line '\\target' option to send to SIMPL+ compiler for single target compile."
-                    },
-                    "simpl.multipleTargets": {
-                        "type": "string",
-                        "default": "series2 series3",
-                        "enum": [
-                            "series2 series3",
-                            "series3 series4",
-                            "series2 series3 series4"
-                        ],
-                        "description": "Command line '\\target' option to send to SIMPL+ compiler for multi target compile."
-                    },
-                    "simpl.multipleFileTargets": {
-                        "type": "string",
-                        "default": "series3",
+                        "default": "series3 series4",
                         "enum": [
                             "series2",
                             "series3",
@@ -101,7 +81,7 @@
                             "series3 series4",
                             "series2 series3 series4"
                         ],
-                        "description": "Command line '\\target' option to send to SIMPL+ compiler for multi file compile."
+                        "description": "Default command line '\\target' option to send to the SIMPL+ compiler when a .ush file is not available."
                     }
                 }
             }
@@ -110,49 +90,49 @@
             "editor/context": [
                 {
                     "when": "resourceLangId == simpl+",
+                    "command": "extension.simplCC_defaultCompile",
+                    "group": "2_spluscc@1"
+                },
+                {
+                    "when": "resourceLangId == simpl+",
+                    "command": "extension.simplCC_selectCompileSingle",
+                    "group": "2_spluscc@2"
+                },
+                {
+                    "when": "resourceLangId == simpl+",
+                    "command": "extension.simplCC_selectCompileMultiple",
+                    "group": "2_spluscc@3"
+                },
+                {
+                    "when": "resourceLangId == simpl+",
                     "command": "extension.simpl_help",
-                    "group": "navigation"
-                },
-                {
-                    "when": "resourceLangId == simpl+",
-                    "command": "extension.simplCC_singleTarget",
-                    "group": "navigation"
-                },
-                {
-                    "when": "resourceLangId == simpl+",
-                    "command": "extension.simplCC_multiTarget",
-                    "group": "navigation"
-                },
-                {
-                    "when": "resourceLangId == simpl+",
-                    "command": "extension.simplCC_multiFile",
-                    "group": "navigation"
+                    "group": "1_splustools@1"
                 },
                 {
                     "when": "resourceLangId == simpl+",
                     "command": "extension.simpl_visualize",
-                    "group": "navigation"
+                    "group": "1_splustools@2"
                 },
                 {
                     "when": "resourceLangId == simpl+",
                     "command": "extension.simplCC_API",
-                    "group": "navigation"
+                    "group": "3_ssharptools@1"
                 }
             ]
         },
         "keybindings": [
             {
-                "command": "extension.simplCC_singleTarget",
+                "command": "extension.simplCC_defaultCompile",
                 "key": "ctrl+f12",
                 "when": "resourceLangId == simpl+"
             },
             {
-                "command": "extension.simplCC_multiTarget",
+                "command": "extension.simplCC_selectCompileSingle",
                 "key": "ctrl+alt+f12",
                 "when": "resourceLangId == simpl+"
             },
             {
-                "command": "extension.simplCC_multiFile",
+                "command": "extension.simplCC_selectCompileMultiple",
                 "key": "ctrl+shift+f12",
                 "when": "resourceLangId == simpl+"
             },

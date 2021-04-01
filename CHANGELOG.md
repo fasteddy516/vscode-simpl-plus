@@ -4,9 +4,16 @@ All notable changes to the "crestron-simpl-plus" extension will be documented in
 
 ## 2.0.0
 
+- Complete re-work of compile options and target selection:
+  - **CTRL-F12** - _Compile current file_:  
+    If a `.ush` file is available, the targets specified within will be used.  Otherwise, the default targets specified in the extension's settings will be applied.
+  - **CTRL-ALT-F12** - _Select targets and compile current file_:  
+    Provides a dialog for selecting the desired processor targets, then compiles the current file using that selection.  
+  - **CTRL-SHIFT-F12** - _Select target and compile all files_:  
+    Provides a dialog for selecting the desired processor targets, then compiles all `.usp` files in the open folder using that selection.  
 - Added support for 4-series targets.
-- References to processor series have been removed from compile commands.
-- Target processor series for compile commands is now specified through settings.
+- Updated extension and dependencies based on current Yeoman/generator-code scaffolding.
+- Some code cleanup and refactoring
 
 ## 1.3.3
 

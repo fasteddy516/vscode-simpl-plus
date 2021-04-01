@@ -1,22 +1,21 @@
 # crestron-simpl-plus README
 
-VSCode Extension which adds syntax highlighting and provides commands in the command pallete for compiling.
+VSCode Extension which adds syntax highlighting and provides commands in the command palette for compiling.
 
-Note: To take advantage of the compiler operations, you must have the Crestron provided Simpl+ Compiler installed.
+Note: To take advantage of the compiler operations, you must have the Crestron provided SIMPL+ Compiler installed.
 
 ## Features
 
 Syntax highlighting. Compiler.
 
-TODO: code file-type icons, maybe better intellisense + autocompletes.
-
 This extension contributes the following commands:
 
-* `extension.simplCC_singleTarget`: Compiles the currently opened file if it is a SIMPL+ .usp for a single processor family as specified in settings.
-* `extension.simplCC_multiTarget`: Compiles the currently opened file if it is a SIMPL+ .usp for multiple processor families as specified in settings.
-* `extension.simplCC_multiFile`: Finds all .usp files in the open folder and compiles them all for processor family/families specified in settings.
+* `extension.simplCC_defaultCompile`: Compiles the currently opened file for the targets specified in a `.ush` file, or using the default target setting if no `.ush` exists.  
+* `extension.simplCC_selectCompileSingle`: Provides a target selection dialog, then compiles the currently opened file for the selected targets.
+* `extension.simplCC_selectCompileMultiple`: Provides a target selection dialog, then finds all `.usp` files in the open folder and compiles them for the selected targets.
 * `extension.simpl_help`: Opens the Crestron SIMPL+ help reference file.
-* `extension.simpl_visualize`: Opens a preview window and lets you preview the signal layout in real time. Note: this will automatically fully expand your module signals to their maximum available size.
+* `extension.simpl_visualize`: Opens a preview window and lets you see the signal layout of the SIMPL+ module in real time. Note: this will automatically fully expand your module signals to their maximum available size.
+* `extension.simplCC_API`: Opens the API reference for all SIMPL# libraries used in the current SIMPL+ module.
 
 ## Extension Settings
 
@@ -26,18 +25,19 @@ This extension contributes the following settings:
 * `simpl.helpLocation`: sets the path of the SIMPL+ reference guide. Can be set to a custom path via the user settings. Please use the double \ to specify directory paths.
 * `simpl.terminalLocation`: sets path of the default windows cmd.exe. Can be set to a custom path via the user settings. Please use the double \ to specify directory paths. 
 
-* `simpl.singleTarget`: specifies the processor family for single target compiles.
-* `simpl.multipleTargets`: specifies the processor families for multi target compiles.
-* `simpl.multipleFileTargets`: specifies the processor family/families for multi-file compiles.
+* `simpl.defaultTarget`: specifies the default command line `\target` option to send to the SIMPL+ compiler when a `.ush` file is not available.
 
 ## Keybindings and Menus
 
 All commands are added to the right click context menu of the editor tab, and the following keybindings have been added.
 
-* `ctrl+F1`: Opens Simpl+ Help.
-* `ctrl+F12`: Compiles current file for a single processor family.
-* `ctrl+alt+F12`: Compiles current file for multiple processor families.
-* `ctrl+shift+F12`: Compiles all .usp files in the open working folder for single or multiple processor families.
+- `CTRL+F1` - _Open Simpl+ Help_
+- `CTRL+F12` - _Compile current file_:  
+    If a `.ush` file is available, the targets specified within will be used.  Otherwise, the default targets specified in the extension's settings will be applied.
+- `CTRL+ALT+F12` - _Select targets and compile current file_:  
+    Provides a dialog for selecting the desired processor targets, then compiles the current file using that selection.  
+- `CTRL+SHIFT+F12` - _Select target and compile all files_:  
+    Provides a dialog for selecting the desired processor targets, then compiles all `.usp` files in the open folder using that selection.
 
 ## Snippets
 
@@ -51,9 +51,16 @@ So users can utilize their own snippets if desired, code snippets are available 
 
 ## 2.0.0
 
+- Complete re-work of compile options and target selection:
+  - `CTRL+F12` - _Compile current file_:  
+    If a `.ush` file is available, the targets specified within will be used.  Otherwise, the default targets specified in the extension's settings will be applied.
+  - `CTRL+ALT+F12` - _Select targets and compile current file_:  
+    Provides a dialog for selecting the desired processor targets, then compiles the current file using that selection.  
+  - `CTRL+SHIFT+F12` - _Select target and compile all files_:  
+    Provides a dialog for selecting the desired processor targets, then compiles all `.usp` files in the open folder using that selection.  
 - Added support for 4-series targets.
-- References to processor series have been removed from compile commands.
-- Target processor series for compile commands is now specified through settings.
+- Updated extension and dependencies based on current Yeoman/generator-code scaffolding.
+- Some code cleanup and refactoring
 
 ## 1.3.3
 

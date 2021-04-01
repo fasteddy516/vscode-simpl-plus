@@ -2,35 +2,25 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-// import * as fs from "fs";
-// import * as path from "path";
 
 import * as svg from "./visualizer";
 import * as api from "./api";
-// import { stat } from 'fs';
-// import { getSimplSharpLibraries } from './api-util';
-// import { stat } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "crestron-simpl-plus" is now active!');
-
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-
     let previewUri = vscode.Uri.parse('simpl-visualize://authority/simpl-visualize');
 
     class TextDocumentContentProvider implements vscode.TextDocumentContentProvider {
+        
         private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
 
         public update(uri: vscode.Uri) {
             this._onDidChange.fire(uri);
         }
+
         public provideTextDocumentContent(uri: vscode.Uri): string {
             return this.createVisualizer();
         }
@@ -49,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return this.errorSnippet("A SIMPL+ file is not open.");
             }
         }
+
         private extractVisualizer(): string {
             let parser = new svg.VisualizerParse();
             parser.parseSimplPlus();
@@ -56,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
             let viewer = new svg.SVGCreator(parser);
             return viewer.returnSVG();
         }
+
         private errorSnippet(error: string): string {
             return `
 				<body>
@@ -66,8 +58,6 @@ export function activate(context: vscode.ExtensionContext) {
         get onDidChange(): vscode.Event<vscode.Uri> {
             return this._onDidChange.event;
         }
-
-
     }
 
     let webPanel: vscode.WebviewPanel | undefined = undefined;
@@ -92,37 +82,79 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    let singleTarget_compile = vscode.commands.registerCommand('extension.simplCC_singleTarget', () => {
-        processSimpl("\\target " + vscode.workspace.getConfiguration("simpl").singleTarget);
-    });
-
-    let multiTarget_compile = vscode.commands.registerCommand('extension.simplCC_multiTarget', () => {
-        processSimpl("\\target " + vscode.workspace.getConfiguration("simpl").multipleTargets);
-    });
-
-    let multiFile = vscode.commands.registerCommand("extension.simplCC_multiFile", () => {
-        let foundFiles = vscode.workspace.findFiles('*.usp');
-        let term = vscode.window.createTerminal('simplCC', vscode.workspace.getConfiguration("simpl").terminalLocation);
-        let compiler = new SimplCompiler();
-
-        term.show();
-        foundFiles.then(files => {
-            if (files.length) {
-                files.forEach(e => {
-                    compiler.filepaths.push(e.fsPath);
-                });
-                term.sendText(compiler.buildCommand("\\target " + vscode.workspace.getConfiguration("simpl").multipleFileTargets));
-            } else {
-                vscode.window.showErrorMessage("No .usp files found");
+    let defaultCompile = vscode.commands.registerCommand('extension.simplCC_defaultCompile', () => {
+        let targets = "";
+        let editor = vscode.window.activeTextEditor;
+        if (editor) {
+            let ush = editor.document.uri.fsPath.replace(/.usp$/i, ".ush");
+            if (existsSync(ush)) {
+                let data = readFileSync(ush).toString();
+                if (data.length) {
+                    let startPos = data.indexOf("Inclusions_CDS=");
+                    if (startPos) {
+                        let endPos = data.indexOf("\r", startPos);
+                        let inclusions = data.substring(startPos, endPos);
+                        if (inclusions.includes("5")) {
+                            targets += "series2 ";
+                        }
+                        if (inclusions.includes("6")) {
+                            targets += "series3 ";
+                        }
+                        if (inclusions.includes("7")) {
+                            targets += "series4 ";
+                        }
+                        targets = targets.trim();                    
+                    }
+                }
             }
-        });
+        }        
+        
+        if (!targets.length) {
+            targets = vscode.workspace.getConfiguration("simpl").defaultTarget;
+            //vscode.window.showInformationMessage(".ush file not found, compiling for default targets: " + targets);                    
+        }
+        else {
+            //vscode.window.showInformationMessage("Compiling for targets specified in .ush file: " + targets);
+        }
+        
+        processSimpl("\\target " + targets);
     });
 
-    let simpl_visualize = vscode.commands.registerCommand("extension.simpl_visualize", () => {
-        // return vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, 'SIMPL Preview').then((success) => {
-        // }, (reason) => {
-        // 	vscode.window.showErrorMessage(reason);
-        // });
+    let selectTargetAndCompileSingle = vscode.commands.registerCommand('extension.simplCC_selectCompileSingle', async () => {
+        let targets = await getTargets();
+        if (!targets.length) {
+            vscode.window.showWarningMessage("Simpl+: No target selected, compile operation cancelled.");            
+        }
+        else {
+            processSimpl("\\target " + targets);
+        }
+    });
+
+    let selectTargetAndCompileMultiple = vscode.commands.registerCommand("extension.simplCC_selectCompileMultiple", async () => {
+        let targets = await getTargets();
+        if (!targets.length) {
+            vscode.window.showWarningMessage("Simpl+: No target selected, compile operation cancelled.");            
+        }
+        else {
+            let foundFiles = vscode.workspace.findFiles('*.usp');
+            let term = vscode.window.createTerminal('simplCC', vscode.workspace.getConfiguration("simpl").terminalLocation);
+            let compiler = new SimplCompiler();
+
+            term.show();
+            foundFiles.then(files => {
+                if (files.length) {
+                    files.forEach(e => {
+                        compiler.filepaths.push(e.fsPath);
+                    });
+                    term.sendText(compiler.buildCommand("\\target " + targets));
+                } else {
+                    vscode.window.showErrorMessage("No .usp files found");
+                }
+            });
+        }
+    });
+
+    let simplVisualize = vscode.commands.registerCommand("extension.simpl_visualize", () => {
         if (webPanel) {
             webPanel.reveal();
         }
@@ -145,16 +177,13 @@ export function activate(context: vscode.ExtensionContext) {
         );
     });
 
-    let help_command = vscode.commands.registerCommand("extension.simpl_help", () => {
+    let simplHelp = vscode.commands.registerCommand("extension.simpl_help", () => {
         let helpLocation = vscode.workspace.getConfiguration("simpl").helpLocation;
-
         let term = vscode.window.createTerminal('simpl', vscode.workspace.getConfiguration("simpl").terminalLocation);
         term.sendText("\"" + helpLocation + "\"");
-
     });
 
-    let open_api = vscode.commands.registerCommand("extension.simplCC_API", () => {
-
+    let simplApi = vscode.commands.registerCommand("extension.simplCC_API", () => {
         let editor = vscode.window.activeTextEditor;
         if (editor) {
             let newAPI = new api.API(editor);
@@ -162,13 +191,26 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(singleTarget_compile);
-    context.subscriptions.push(multiTarget_compile);
-    context.subscriptions.push(multiFile);
-    context.subscriptions.push(help_command);
-    context.subscriptions.push(simpl_visualize);
-    context.subscriptions.push(open_api);
+    context.subscriptions.push(defaultCompile);
+    context.subscriptions.push(selectTargetAndCompileSingle);
+    context.subscriptions.push(selectTargetAndCompileMultiple);
+    context.subscriptions.push(simplHelp);
+    context.subscriptions.push(simplVisualize);
+    context.subscriptions.push(simplApi);
     context.subscriptions.push(registration);
+}
+
+async function getTargets(): Promise<string> {
+    //vscode.window.showInformationMessage("Simpl+: Please select target processor series.");
+    let targets = "";
+    let result = await vscode.window.showQuickPick(
+        ["2-Series", "3-Series", "4-Series"],
+        {canPickMany: true, ignoreFocusOut: true, placeHolder: "Select target processor series:"}
+    );
+    if ((result !== undefined) && result.length) {
+        result.forEach(t => { targets += ("series" + parseInt(t) + " "); });
+    }
+    return(targets.trim());
 }
 
 function processSimpl(args: string) {
@@ -197,7 +239,6 @@ function processSimpl(args: string) {
 
 class SimplCompiler {
     public filepaths: string[] = [];
-
     public compilerPath: string;
 
     constructor() {
@@ -218,6 +259,7 @@ class SimplCompiler {
     }
 
 }
+
 
 // this method is called when your extension is deactivated
 export function deactivate() {
