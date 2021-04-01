@@ -49,7 +49,7 @@ So users can utilize their own snippets if desired, code snippets are available 
 
 ## Release Notes
 
-## 1.4.0
+## 2.0.0
 
 - Added support for 4-series targets.
 - References to processor series have been removed from compile commands.
