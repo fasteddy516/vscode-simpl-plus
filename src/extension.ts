@@ -123,7 +123,7 @@ export function activate(context: vscode.ExtensionContext) {
     let selectTargetAndCompileSingle = vscode.commands.registerCommand('extension.simplCC_selectCompileSingle', async () => {
         let targets = await getTargets();
         if (!targets.length) {
-            vscode.window.showWarningMessage("Simpl+: No target selected, compile operation cancelled.");            
+            vscode.window.showWarningMessage("SIMPL+: No target selected, compile operation cancelled.");            
         }
         else {
             processSimpl("\\target " + targets);
@@ -133,7 +133,7 @@ export function activate(context: vscode.ExtensionContext) {
     let selectTargetAndCompileMultiple = vscode.commands.registerCommand("extension.simplCC_selectCompileMultiple", async () => {
         let targets = await getTargets();
         if (!targets.length) {
-            vscode.window.showWarningMessage("Simpl+: No target selected, compile operation cancelled.");            
+            vscode.window.showWarningMessage("SIMPL+: No target selected, compile operation cancelled.");            
         }
         else {
             let foundFiles = vscode.workspace.findFiles('*.usp');
@@ -161,7 +161,7 @@ export function activate(context: vscode.ExtensionContext) {
         else {
             webPanel = vscode.window.createWebviewPanel(
                 previewUri.toString(),
-                "Simpl+ Visualizer",
+                "SIMPL+ Visualizer",
                 vscode.ViewColumn.Two
             );
         }
@@ -201,7 +201,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 async function getTargets(): Promise<string> {
-    //vscode.window.showInformationMessage("Simpl+: Please select target processor series.");
     let targets = "";
     let result = await vscode.window.showQuickPick(
         ["2-Series", "3-Series", "4-Series"],

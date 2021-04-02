@@ -23,7 +23,7 @@ export class API {
                 // START OF NEW API OPENING FUNCTIONALITY
                
                 if (!this.openFile(apiPath)) { 
-                    vscode.window.showErrorMessage('Unable to locate API file: ' + apiPath);
+                    vscode.window.showErrorMessage('SIMPL+: Unable to locate API file ' + apiPath);
                 }
                 
                 // END OF NEW API OPENING FUNCTIONALITY
